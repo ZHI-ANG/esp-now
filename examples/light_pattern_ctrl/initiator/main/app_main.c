@@ -23,12 +23,14 @@
 #include "espnow_utils.h"
 
 #include "esp_eth_spec.h"
+
+#include "sdkconfig.h"
 #include "app_priv.h"
 
 static const char *TAG = "app_main";
 
-#define RESPONDER_PREFIX                "$RESPONDER/"
-#define GROUP_NAME                      "GROUP1"
+#define RESPONDER_PREFIX                CONFIG_RESPONDER_PREFIX
+#define GROUP_NAME                      CONFIG_GROUP_NAME
 #define RESPONDER_NAME RESPONDER_PREFIX GROUP_NAME
 
 static const char *BUTTON_STATE_STR[2] = {"ON", "OFF"};

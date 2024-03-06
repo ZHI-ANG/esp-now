@@ -24,16 +24,12 @@
 
 #include "esp_eth_spec.h"
 #include "hal/gpio_types.h"
+
+#include "sdkconfig.h"
 #include "app_priv.h"
 
-// You can modify these according to your boards.
-#define UART_BAUD_RATE 115200
-#define UART_PORT_NUM  0
-#define UART_TX_IO     UART_PIN_NO_CHANGE
-#define UART_RX_IO     UART_PIN_NO_CHANGE
-
-#define RESPONDER_PREFIX                "$RESPONDER/"
-#define GROUP_NAME                      "GROUP1"
+#define RESPONDER_PREFIX                CONFIG_RESPONDER_PREFIX
+#define GROUP_NAME                      CONFIG_GROUP_NAME
 #define RESPONDER_NAME RESPONDER_PREFIX GROUP_NAME
 
 static const char *TAG = "app_main";
