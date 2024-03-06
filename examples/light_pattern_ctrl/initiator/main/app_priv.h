@@ -2,6 +2,11 @@
 #define APP_PRIV_H
 
 #include "iot_button.h"
+#include "esp_eth_spec.h"
+
+#define RESPONDER_PREFIX                CONFIG_RESPONDER_PREFIX
+#define GROUP_NAME                      CONFIG_GROUP_NAME
+#define RESPONDER_NAME RESPONDER_PREFIX GROUP_NAME
 
 void app_driver_button_init(button_cb_t button_cb);
 #endif /* APP_PRIV_H */

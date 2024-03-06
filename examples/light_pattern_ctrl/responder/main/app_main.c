@@ -22,15 +22,7 @@
 #include "espnow_storage.h"
 #include "espnow_utils.h"
 
-#include "esp_eth_spec.h"
-#include "hal/gpio_types.h"
-
-#include "sdkconfig.h"
 #include "app_priv.h"
-
-#define RESPONDER_PREFIX                CONFIG_RESPONDER_PREFIX
-#define GROUP_NAME                      CONFIG_GROUP_NAME
-#define RESPONDER_NAME RESPONDER_PREFIX GROUP_NAME
 
 static const char *TAG = "app_main";
 
@@ -46,12 +38,6 @@ static gpio_num_t gpio_list[GPIO_LIST_LEN] = {
 };
 
 static int next_gpio_idx; /* next gpio pin to be bounded to initiator */
-
-/* the control table of each initiator bounded with gpio pin */
-typedef struct {
-    gpio_num_t gpio_pin;
-    uint8_t mac_addr[ETH_ADDR_LEN];
-} gpio_bind_t;
 
 static gpio_bind_t s_gpio_bind_table[GPIO_LIST_LEN];
 
