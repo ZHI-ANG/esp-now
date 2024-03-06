@@ -52,7 +52,7 @@ static void button_toggle_cb(void *arg, void *priv_data)
 {
     static espnow_frame_head_t frame_head = {
         .retransmit_count = CONFIG_RETRY_NUM,
-        .broadcast        = true,
+        .broadcast        = false,
     };
 
     static bool state = 0;
@@ -87,6 +87,7 @@ static esp_err_t espnow_data_recv_cb(uint8_t *src_addr, void *data,
         if (strncmp(RESPONDER_NAME, (char *)data, strlen(RESPONDER_NAME)) == 0) {
             ESP_LOGI(TAG, "Bind to RESPONDER: %s", (char *)data);
             memcpy(RESPONDER_ADDR, src_addr, ETH_ADDR_LEN);
+            espnow_add_peer(src_addr, NULL);
         }
     }
 
