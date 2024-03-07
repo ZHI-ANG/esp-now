@@ -10,6 +10,10 @@ menu "Example Configuration"
         string "The prefix of responder's name"
         default "$RESPONDER/"
 
+    config INITIATOR_PREFIX
+        string "The prefix of initiator's name"
+        default "$INITIATOR/"
+
     config GROUP_NAME
         string "Your group name"
         default "GROUP_0"

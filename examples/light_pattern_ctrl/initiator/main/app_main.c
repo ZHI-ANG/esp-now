@@ -59,7 +59,14 @@ static void button_toggle_cb(void *arg, void *priv_data)
     }
 
     else {
-        espnow_send(ESPNOW_DATA_TYPE_DATA, RESPONDER_ADDR, BUTTON_STATE_STR[state], strlen(BUTTON_STATE_STR[state])+1, &frame_head, portMAX_DELAY);
+        /* create outbound data and send */
+        char outbound_data[ESPNOW_DATA_LEN];
+        memset(outbound_data, 0, ESPNOW_DATA_LEN);
+        strcat(outbound_data, INITIATOR_NAME);
+        strcat(outbound_data, "/");
+        strcat(outbound_data, BUTTON_STATE_STR[state]); /* $INITIATOR/GROUP_X/ON or $INITIATOR/GROUP_X/OFF */
+        ESP_LOGI(TAG, "Sending data: %s", outbound_data);
+        espnow_send(ESPNOW_DATA_TYPE_DATA, RESPONDER_ADDR, outbound_data, strlen(outbound_data)+1, &frame_head, portMAX_DELAY);
     }
 }
 

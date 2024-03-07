@@ -33,8 +33,19 @@ void app_driver_gpio_init(gpio_num_t *gpio_list, size_t len)
     gpio_ll_set_level(&GPIO, GPIO_NUM_19, 0);
 }
 
-void app_driver_gpio_set_level(int pin_num, int level)
+void app_driver_gpio_set_onoff(int pin_num, command_t command)
 {
-    ESP_LOGI(TAG, "set GPIO(%d) to %s", pin_num, level?"HIGH":"LOW");
+    int level = 0;
+
+    if (command == ON) {
+        level = 1;
+    }
+
+    if (command == OFF) {
+        level = 0;
+    }
+
     gpio_ll_set_level(&GPIO, pin_num, level);
+
+    ESP_LOGI(TAG, "set GPIO(%d) to %s", pin_num, level?"HIGH":"LOW");
 }
