@@ -17,6 +17,7 @@
 
 #define EXAMPLE_GPIO_MIN 0
 #define EXAMPLE_GPIO_MAX 7
+#define EXAMPLE_GPIO_NUM ( EXAMPLE_GPIO_MAX - EXAMPLE_GPIO_MIN + 1 )
 
 void app_driver_gpio_init();
 void app_driver_gpio_toggle(int pin_num);

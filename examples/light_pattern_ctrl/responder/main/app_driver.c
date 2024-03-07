@@ -33,11 +33,11 @@ void app_driver_gpio_toggle(int pin_num)
         return;
     }
 
-    static bool level = true;
-    level = !level;
-    gpio_ll_set_level(&GPIO, pin_num, (int)level);
+    static bool gpio_level[EXAMPLE_GPIO_NUM] = {true, true, true, true, true, true, true, true};
+    gpio_level[pin_num] = !gpio_level[pin_num];
+    gpio_ll_set_level(&GPIO, pin_num, (int)gpio_level[pin_num]);
 
-    ESP_LOGI(TAG, "set GPIO(%d) to %s", pin_num, level?"HIGH":"LOW");
+    ESP_LOGI(TAG, "set GPIO(%d) to %s", pin_num, gpio_level[pin_num]?"HIGH":"LOW");
 }
 
 /* bootup check */
