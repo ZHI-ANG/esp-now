@@ -7,11 +7,12 @@
 
 #define TAG "app_driver"
 
-void app_driver_gpio_init(gpio_num_t *gpio_list, size_t len)
+void app_driver_gpio_init()
 {
     uint64_t pin_mask = 0;
-    for ( int idx=0; idx<len; idx++) {
-        pin_mask |= 1 << gpio_list[idx];
+
+    for (int pin_num=EXAMPLE_GPIO_MIN; pin_num<=EXAMPLE_GPIO_MAX; pin_num++) {
+        pin_mask |= 1 << pin_num;
     }
 
     ESP_LOGI(TAG, "pin_mask=%08x", (uint32_t)pin_mask);
@@ -20,32 +21,38 @@ void app_driver_gpio_init(gpio_num_t *gpio_list, size_t len)
     io_conf.mode = GPIO_MODE_OUTPUT;
     io_conf.pin_bit_mask = pin_mask;
     io_conf.intr_type = GPIO_INTR_DISABLE;
-    io_conf.pull_down_en = 1;
-    io_conf.pull_up_en = 0;
+    io_conf.pull_down_en = 0;
+    io_conf.pull_up_en = 1;
     gpio_config(&io_conf);
-
-    gpio_ll_set_level(&GPIO, GPIO_NUM_18, 1);
-    gpio_ll_set_level(&GPIO, GPIO_NUM_19, 1);
-
-    vTaskDelay(1000 / portTICK_PERIOD_MS);
-
-    gpio_ll_set_level(&GPIO, GPIO_NUM_18, 0);
-    gpio_ll_set_level(&GPIO, GPIO_NUM_19, 0);
 }
 
-void app_driver_gpio_set_onoff(int pin_num, command_t command)
+void app_driver_gpio_toggle(int pin_num)
 {
-    int level = 0;
-
-    if (command == ON) {
-        level = 1;
+    if (pin_num < EXAMPLE_GPIO_MIN || pin_num > EXAMPLE_GPIO_MAX) {
+        ESP_LOGE(TAG, "GPIO(%d) is out of range %d..%d", pin_num, EXAMPLE_GPIO_MIN, EXAMPLE_GPIO_MAX);
+        return;
     }
 
-    if (command == OFF) {
-        level = 0;
-    }
-
-    gpio_ll_set_level(&GPIO, pin_num, level);
+    static bool level = true;
+    level = !level;
+    gpio_ll_set_level(&GPIO, pin_num, (int)level);
 
     ESP_LOGI(TAG, "set GPIO(%d) to %s", pin_num, level?"HIGH":"LOW");
+}
+
+/* bootup check */
+void app_driver_gpio_self_check()
+{
+    for (int pin_num=EXAMPLE_GPIO_MIN; pin_num<=EXAMPLE_GPIO_MAX; pin_num++) {
+        gpio_ll_set_level(&GPIO, pin_num, 1);
+    }
+
+    for (int pin_num=EXAMPLE_GPIO_MIN; pin_num<=EXAMPLE_GPIO_MAX; pin_num++) {
+        gpio_ll_set_level(&GPIO, pin_num, 0);
+        vTaskDelay(1000 / portTICK_PERIOD_MS);
+    }
+
+    for (int pin_num=EXAMPLE_GPIO_MIN; pin_num<=EXAMPLE_GPIO_MAX; pin_num++) {
+        gpio_ll_set_level(&GPIO, pin_num, 1);
+    }
 }

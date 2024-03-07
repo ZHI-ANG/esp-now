@@ -25,8 +25,6 @@
 
 static const char *TAG = "app_main";
 
-static const char *BUTTON_STATE_STR[2] = {"ON", "OFF"};
-
 static uint8_t RESPONDER_ADDR[ETH_ADDR_LEN] = { 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF };
 
 static void app_wifi_init()
@@ -49,24 +47,22 @@ static void button_toggle_cb(void *arg, void *priv_data)
         .broadcast        = false,
     };
 
-    static bool state = 0;
-    state = !state; /* toggle */
-
-    ESP_LOGI(TAG, "Button pressed. Current state: %s", BUTTON_STATE_STR[state]);
-
+    /* if not yet bound to responder, never send toggle command */
     if (memcmp(RESPONDER_ADDR, ESPNOW_ADDR_BROADCAST, ETH_ADDR_LEN) == 0) {
-        ESP_LOGI(TAG, "State not sent. Still waiting to bind with responder");
+        ESP_LOGI(TAG, "Toggle command not sent. Still waiting to bind with responder");
     }
 
     else {
         /* create outbound data and send */
-        char outbound_data[ESPNOW_DATA_LEN];
-        memset(outbound_data, 0, ESPNOW_DATA_LEN);
-        strcat(outbound_data, INITIATOR_NAME);
-        strcat(outbound_data, "/");
-        strcat(outbound_data, BUTTON_STATE_STR[state]); /* $INITIATOR/GROUP_X/ON or $INITIATOR/GROUP_X/OFF */
-        ESP_LOGI(TAG, "Sending data: %s", outbound_data);
-        espnow_send(ESPNOW_DATA_TYPE_DATA, RESPONDER_ADDR, outbound_data, strlen(outbound_data)+1, &frame_head, portMAX_DELAY);
+        char toggle_command[ESPNOW_DATA_LEN];
+        memset(toggle_command, 0, ESPNOW_DATA_LEN);
+        strcat(toggle_command, INITIATOR_NAME);
+        strcat(toggle_command, "/");
+
+        /* attach gpio to toggle command */
+        strcat(toggle_command, CONTROL_PIN); /* $INITIATOR/GROUP_{X}/{GPIO_PIN} */
+        ESP_LOGI(TAG, "Sending data: %s", toggle_command);
+        espnow_send(ESPNOW_DATA_TYPE_DATA, RESPONDER_ADDR, toggle_command, strlen(toggle_command)+1, &frame_head, portMAX_DELAY);
     }
 }
 

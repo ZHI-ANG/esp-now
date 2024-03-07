@@ -10,6 +10,7 @@
 
 #define RESPONDER_NAME RESPONDER_PREFIX GROUP_NAME
 #define INITIATOR_NAME INITIATOR_PREFIX GROUP_NAME
+#define CONTROL_PIN    CONFIG_CONTROL_PIN
 
 void app_driver_button_init(button_cb_t button_cb);
 #endif /* APP_PRIV_H */

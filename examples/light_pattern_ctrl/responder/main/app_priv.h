@@ -15,20 +15,11 @@
 #define RESPONDER_NAME RESPONDER_PREFIX GROUP_NAME
 #define INITIATOR_NAME INITIATOR_PREFIX GROUP_NAME
 
-/* the binding table of each initiator and corresponding gpio pin */
-typedef struct {
-    gpio_num_t gpio_pin;
-    uint8_t mac_addr[ETH_ADDR_LEN];
-} gpio_bind_t;
+#define EXAMPLE_GPIO_MIN 0
+#define EXAMPLE_GPIO_MAX 7
 
-typedef enum {
-    OFF,
-    ON,
-    INVALID,
-    NUM_CMD,
-} command_t;
-
-void app_driver_gpio_init(gpio_num_t *gpio_list, size_t len);
-void app_driver_gpio_set_onoff(int pin_num, command_t cmd);
+void app_driver_gpio_init();
+void app_driver_gpio_toggle(int pin_num);
+void app_driver_gpio_self_check();
 
 #endif /* APP_PRIV_H */
