@@ -3,4 +3,4 @@ dependencies:
   espressif/button: "==2.5.0"
   esp-now:
     version: "2.*"
-    override_path: "../../../.."
+    # override_path: "../../../.."
